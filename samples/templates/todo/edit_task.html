@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}{{ list_title }} edit task{% endblock %}
+
+{% block content %}
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+
+
+<h1>Edit Task</h1>
+
+<form action="" method="POST">
+{{ form }}   
+<p><input type="submit" name="edit_task" value="Edit task"></p>
+</form>
+	
+{% endblock %}
