@@ -2,7 +2,7 @@
 ABOUT DJANGO-TODO
 --------------------
 
-Version 0.9
+Version 0.91
 Scot Hacker - shacker at birdhouse dot org
 
 django-todo is a multi-user, multi-group task management and assignment system. 
@@ -95,7 +95,9 @@ INSTALLATION
 Versions
 --------------------
 
-1.0 - First release
+0.9.1 - Removed context_processors.py - leftover turdlet
+
+0.9 - First release
 
 --------------------
 TODO ITEMS for django-todo

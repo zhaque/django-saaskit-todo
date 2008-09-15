@@ -6,6 +6,7 @@ from django.contrib.auth.models import User,Group
 import string, datetime
 
 
+
 class List(models.Model):
     name = models.CharField(max_length=60)
     slug = models.SlugField(max_length=60,editable=False)
@@ -20,8 +21,9 @@ class List(models.Model):
             # If we end up with double hyphens, remove those too.
             import re
             self.slug = re.sub(r"[^A-Za-z0-9\-]", "", self.slug).replace('--','-')
-            
-        super(List, self).save()
+
+            super(List, self).save()
+        
 
     def __str__(self):
         return self.name
