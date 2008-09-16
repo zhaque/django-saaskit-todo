@@ -102,3 +102,9 @@ ul.messages li {
 a img {
     border:none;
 }
+
+input {
+ color: #3A3A3A;
+ font-family:Verdana;
+ font-size:14px;
+}

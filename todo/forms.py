@@ -22,8 +22,13 @@ class AddListForm(ModelForm):
         
 class AddItemForm(ModelForm):
     due_date = forms.DateField(
+                    required=False,
                     widget=forms.DateTimeInput(attrs={'class':'due_date_picker'})
                     )
+                    
+    name = forms.CharField(
+                    widget=forms.widgets.TextInput(attrs={'size':45})
+                    ) 
 
     # The picklist showing the users to which a new task can be assigned
     # must find other members of the groups the current user belongs to.

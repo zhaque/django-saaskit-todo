@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "todo/base.html" %}
 
 
 {% block title %}{{ list_title }} Todo List: {{ list.name }}{% endblock %}
@@ -9,8 +9,10 @@
     {% ifequal list_slug "mine" %}
         <h1>Tasks assigned to {{ request.user }}</h1>    
     {% else %}
+    {% ifequal auth_ok 1 %}
        <h1>Tasks filed under "{{ list.name }}"</h1>
        <p>This list belongs to {{ list.group }}</p>
+    {% endifequal %}
     {% endifequal %}
 
 
@@ -23,7 +25,7 @@
    </ul>
    {% endif %}   
 
-
+   {% ifequal auth_ok 1 %}
    <form action="" method="POST">
    
    {# Only show task adder if viewing a proper list #}
@@ -134,4 +136,5 @@
 	   <p><a href="/todo/{{ list.id }}/{{ list_slug }}/delete">Delete this list</a></p>
 	{% endifnotequal %}
 	{% endifequal %}
+    {% endifequal %}
 {% endblock %}

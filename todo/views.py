@@ -5,9 +5,11 @@ from todo.forms import AddListForm, AddItemForm, EditItemForm
 from django.shortcuts import get_object_or_404
 from django.contrib import auth
 from django.template import RequestContext
-import datetime
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
+from django.db import IntegrityError
+import datetime
+
 
 
 @login_required
@@ -32,15 +34,23 @@ def list_lists(request):
     
     # Count everything
     list_count = list_list.count()
-    item_count = Item.objects.count()
     
+    # Note admin users see all lists, so count shouldn't filter by just lists the admin belongs to
+    if request.user.is_staff :
+        item_count = Item.objects.filter(completed=0).count()        
+    else:
+        item_count = Item.objects.filter(completed=0).filter(list__group__in=request.user.groups.all()).count()
+
     
     if request.POST:    
         form = AddListForm(request.user,request.POST)
         if form.is_valid():
-            form.save()
-            request.user.message_set.create(message="A new list has been added.")
-            return HttpResponseRedirect(request.path)
+            try:
+                form.save()
+                request.user.message_set.create(message="A new list has been added.")
+                return HttpResponseRedirect(request.path)
+            except IntegrityError:
+                request.user.message_set.create(message="There was a problem saving the new list. Most likely a list with the same name in the same group already exists.")
             
     else:
         form = AddListForm(request.user)
@@ -91,6 +101,22 @@ def view_list(request,list_slug):
     Display and manage items in a task list
     """
     
+    # Make sure the accessing user has permission to view this list.
+    # Always authorize the "mine" view. Admins can view/edit all lists.
+
+    if list_slug == "mine" :
+        auth_ok =1
+    else: 
+        list = get_object_or_404(List, slug=list_slug)
+        listid = list.id    
+        
+        # Check whether current user is a member of the group this list belongs to.
+        if list.group in request.user.groups.all() or request.user.is_staff or list_slug == "mine" :
+            auth_ok = 1   # User is authorized for this view
+        else: # User does not belong to the group this list is attached to
+            request.user.message_set.create(message="You do not have permission to view/edit this list.")
+
+        
     # First check for items in the mark_done POST array. If present, change
     # their status to complete.
     if request.POST.getlist('mark_done'):
@@ -102,8 +128,8 @@ def view_list(request,list_slug):
         	p.completed_date = datetime.datetime.now()
         	p.save()
 	        request.user.message_set.create(message="Item marked complete.")
-	        
-	
+
+
 	# Undo: Set completed items back to incomplete
     if request.POST.getlist('undo_completed_task'):
         undone_items = request.POST.getlist('undo_completed_task')
@@ -112,7 +138,7 @@ def view_list(request,list_slug):
         	p.completed = 0
         	p.save()
 	        request.user.message_set.create(message="Previously completed task marked incomplete.")	        
-        	
+
 
     # And delete any requested items
     if request.POST.getlist('del_task'):
@@ -121,7 +147,7 @@ def view_list(request,list_slug):
         	p = Item.objects.get(id=thisitem)
         	p.delete()
 	        request.user.message_set.create(message="Item deleted.")
-        	
+
     # And delete any *already completed* items
     if request.POST.getlist('del_completed_task'):
         deleted_items = request.POST.getlist('del_completed_task')
@@ -141,20 +167,20 @@ def view_list(request,list_slug):
         completed_list = Item.objects.filter(assigned_to=request.user, completed=1)
         # item = Item.objects.get(pk=1)
         # item.overdue_status()
-        
+
     else:
-        list = get_object_or_404(List, slug=list_slug)
-        listid = list.id
+        # list = get_object_or_404(List, slug=list_slug)
+        # listid = list.id
         task_list = Item.objects.filter(list=list.id, completed=0)
         completed_list = Item.objects.filter(list=list.id, completed=1)
 
-    
+
     if request.POST.getlist('add_task'):
         form = AddItemForm(request.user, request.POST,initial={
         'assigned_to':request.user.id,
-        
+
         })
-        
+
         if form.is_valid():
             form.save()
             # confirmation = "A new task has been added." 
@@ -180,19 +206,32 @@ def edit_task(request,task_id):
     """
     Allow task details to be edited.
     """
-    
-    task = get_object_or_404(Item, pk=task_id)
 
-    if request.POST:    
-         form = EditItemForm(request.POST,instance=task)
-         if form.is_valid():
-             form.save()
-             request.user.message_set.create(message="The task has been edited.")
-             return HttpResponseRedirect('/todo/%s/%s' % (task.list.id, task.list.slug))
-             
+    task = get_object_or_404(Item, pk=task_id)
+        
+    # Before doing anything, make sure the accessing user has permission to view this item.
+    # Determine the group this task belongs to, and check whether current user is a member of that group.
+    # Admins can edit all tasks.
+    
+    if task.list.group in request.user.groups.all() or request.user.is_staff:
+        
+        auth_ok = 1
+        if request.POST:    
+             form = EditItemForm(request.POST,instance=task)
+             if form.is_valid():
+                 form.save()
+                 request.user.message_set.create(message="The task has been edited.")
+                 return HttpResponseRedirect('/todo/%s/%s' % (task.list.id, task.list.slug))
+
+
+        else:
+            form = EditItemForm(instance=task)
+
 
     else:
-        form = EditItemForm(instance=task)
+        request.user.message_set.create(message="You do not have permission to view/edit this task.")
+
+
 
 
     return render_to_response('todo/edit_task.html', locals(), context_instance=RequestContext(request))

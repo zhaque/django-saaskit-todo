@@ -3,13 +3,13 @@
  <head>
    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
    <title>{% block title %}{% endblock %}</title>
-   <link rel="stylesheet" type="text/css" href="/site_media/css/styles.css" />
-   <link rel="stylesheet" type="text/css" href="/site_media/css/ui.datepicker.css" />   
+   <link rel="stylesheet" type="text/css" href="{{ TODO_MEDIA_URL }}css/styles.css" />
+   <link rel="stylesheet" type="text/css" href="{{ TODO_MEDIA_URL }}css/ui.datepicker.css" />   
    
    
     <!-- jquery javascript for calendar widgets etc. -->
-    <script type="text/javascript" src="/site_media/js/jquery-1.2.6.min.js"></script>
-    <script type="text/javascript" src="/site_media/js/ui.datepicker.js"></script>    
+    <script type="text/javascript" src="{{ TODO_MEDIA_URL }}js/jquery-1.2.6.min.js"></script>
+    <script type="text/javascript" src="{{ TODO_MEDIA_URL }}js/ui.datepicker.js"></script>    
    <!-- /javascript -->
    
 </head>
@@ -29,14 +29,13 @@
 
 <div id="navcontainer">
 <ul id="navlist">
-	<li><a href="/">To-do Lists</a> </li>
+	<li><a href="/todo">To-do Lists</a> </li>
     {% if not user.is_authenticated %}
-	<li><a href="{% url auth_login %}">Log In</a> </li>
+	<li><a href="/accounts/login">Log In</a> </li>
 	{% endif %}
     {% if user.is_authenticated %}
-	<li><a href="/list/mine">My Tasks</a> </li>
-	<li><a href="{% url auth_logout %}">Log Out</a> </li>
-	<li><a href="{#% url profiles_profile_detail user.username %#}">My Account</a> </li>			
+	<li><a href="/todo/mine">My Tasks</a> </li>
+	<li><a href="/accounts/logout">Log Out</a> </li>
 	{% endif %}
     {% if user.is_staff %}
 	<li><a href="/admin">Admin</a> </li>

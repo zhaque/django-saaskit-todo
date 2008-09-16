@@ -23,7 +23,6 @@ class List(models.Model):
             self.slug = re.sub(r"[^A-Za-z0-9\-]", "", self.slug).replace('--','-')
 
             super(List, self).save()
-        
 
     def __str__(self):
         return self.name
@@ -32,13 +31,13 @@ class List(models.Model):
         ordering = ["name"]        
         verbose_name_plural = "Lists"
         
-        # We shouldn't have two lists with the same name in the same group
+        # Prevents (at the database level) creation of two lists with the same name in the same group
         unique_together = ("group", "slug")
         
         
         
 class Item(models.Model):
-    name = models.CharField(max_length=60)
+    name = models.CharField(max_length=140)
     list = models.ForeignKey(List)
     created_date = models.DateField()    
     due_date = models.DateField(blank=True,null=True,)

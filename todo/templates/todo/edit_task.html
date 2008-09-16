@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "todo/base.html" %}
 
 {% block title %}{{ list_title }} edit task{% endblock %}
 
@@ -12,7 +12,7 @@
 </ul>
 {% endif %}
 
-
+{% ifequal auth_ok 1 %}
 
 <h1>Edit Task</h1>
 
@@ -20,5 +20,8 @@
 {{ form }}   
 <p><input type="submit" name="edit_task" value="Edit task"></p>
 </form>
+
+{% endifequal %}
+
 	
 {% endblock %}

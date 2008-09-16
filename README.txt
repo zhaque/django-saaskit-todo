@@ -2,10 +2,11 @@
 ABOUT DJANGO-TODO
 --------------------
 
-Version 0.91
+Version 0.92
+
 Scot Hacker - shacker at birdhouse dot org
 
-django-todo is a multi-user, multi-group task management and assignment system. 
+django-todo is a pluggable multi-user, multi-group task management and assignment application for Django. 
 
 The assumption is that your organization/publication/company has multiple groups of employees,
 each with multiple users. Users may belong to multiple groups, and each group can have multiple todo lists.
@@ -37,7 +38,7 @@ You can build it yourself per http://docs.djangoproject.com/en/dev/topics/auth/ 
 django-registration (though you may want to disable open registration if you do that).
 
 Task due dates can be entered manually, but for ease of use, try a JavaScript date picker. I recommend
-JQuery with UI/DatePicker. The sample templates provided with django-todo assume its presence.
+JQuery with UI/DatePicker. The sample templates provided include a JQuery date picker.
 
 http://jquery.com/
 http://docs.jquery.com/UI/Datepicker
@@ -59,10 +60,10 @@ TEMPLATES AND MEDIA
 
 django-todo requires the following templates to be living in templates/todo:
 
-todo/list_lists.html
-todo/view_list.html
-todo/del_list.html
-todo/edit_task.html
+list_lists.html
+view_list.html
+del_list.html
+edit_task.html
 
 Sample templates and media (CSS, images) are included in the "samples" folder, but are NOT supported. 
 To use them, copy them from the "samples" dir to corresponding locations in your project dir,
@@ -72,13 +73,13 @@ making sure your SITE_MEDIA URL is wired up correctly. Feel free to modify these
 INSTALLATION
 --------------------
 
-0) Recommended: Install django-registration (or build your own auth system) and make sure you can log in at /accounts/login
+0) Recommended: Install django-registration (or build your own auth system) and make sure you can 
+log in at /accounts/login .  In Admin, make sure you've created at least one group and one user 
+belonging to that group.
 
 1) Put django-todo/tasks somewhere on your Python path.
 
-2) Add 'todo' to your INSTALLED_APPS
-
-3) To set up your database, run:
+2) To set up your database, run:
 
 	python manage.py syncdb
 
@@ -86,14 +87,48 @@ INSTALLATION
 
 	(r'^todo/', include('todo.urls')),
 
-4) In Admin, make sure you've created at least one group and one user belonging to that group.
 
-5) Log in as that user and access /todo
+4) Add a "todo" symlink from your project's media directory to the application's media directory, e.g.
+
+    cd ~/mysites/myproject/media
+    ln -s /path/to/app/dir/django-todo/todo/media/todo todo
+
+5) In settings.py:
+
+    INSTALLED_APPS = (
+        ...
+        'todo',
+    )    
+
+
+    TODO_MEDIA_URL = '/site_media/todo/'
+
+
+    TEMPLATE_CONTEXT_PROCESSORS = (
+        "django.core.context_processors.auth",
+        "django.core.context_processors.debug",
+        "django.core.context_processors.i18n",
+        "django.core.context_processors.media",
+        "todo.context_processors.todo_vars",
+    )
+
+
+6) Log in as that user and access /todo
 
 
 --------------------
 Versions
 --------------------
+
+0.9.2 
+    - Now fails gracefully when trying to add a 2nd list with the same name to the same group. 
+    - Due dates for tasks are now truly optional.
+    - Corrected datetime editing conflict when editing tasks
+    - Max length of a task name has been raised from 60 to 140 chars. 
+        If upgrading, please modify your database accordingly (field todo_item.name = maxlength 140).
+    - Security: Users supplied with direct task URLs can no longer view/edit tasks outside their group scope
+        Same for list views - authorized views only.
+    - Correct item and group counts on homepage (note - admin users see ALL groups, not just the groups they "belong" to)
 
 0.9.1 - Removed context_processors.py - leftover turdlet
 
@@ -109,10 +144,7 @@ TODO ITEMS for django-todo
 
 - URL of a list view should reference the group name, not group ID. But groups don't have slugs by default, so would have to extend the Group model...
 
-- Due Dates really should be optional (they already should be - not sure why it's behaving as if required)
 
-- Total item count is for all items, not just items in the user's groups
-
-- Fails correctly when trying to add a new list if the same list name already exists in the same group, but doesn't fail elegantly.
-
-- Tagging (probably best served by django-tagging)
+--------------------
+THANKS @MANDRIC!!!!
+--------------------
