@@ -2,7 +2,7 @@
 ABOUT DJANGO-TODO
 --------------------
 
-Version 0.92
+Version 0.9.3
 
 Scot Hacker - shacker at birdhouse dot org
 
@@ -120,6 +120,8 @@ belonging to that group.
 Versions
 --------------------
 
+0.9.3 - Missing link to the individual task editing view
+
 0.9.2 
     - Now fails gracefully when trying to add a 2nd list with the same name to the same group. 
     - Due dates for tasks are now truly optional.
@@ -146,5 +148,7 @@ TODO ITEMS for django-todo
 
 
 --------------------
-THANKS @MANDRIC!!!!
+THANKS 
+
+To @mandric for all the assistance!
 --------------------

@@ -85,7 +85,7 @@
 	            </td>
 	            <td><a href="/profiles/{{ task.created_by }}">{{ task.created_by }}</a></td> 
 	            <td><a href="/profiles/{{ task.assigned_to }}">{{ task.assigned_to }}</a></td>
-	            <td><a href="/todo/task/{{ task.id }}"><img src="/site_media/images/action_go.gif" style="padding-top:3  px;"></a></td>	            
+	            <td><a href="/todo/task/{{ task.id }}"><img src="{{ TODO_MEDIA_URL }}images/action_go.gif" style="padding-top:3  px;"></a></td>	            
                 {% ifequal list_slug "mine" %}
                 <td><a href="/list/{{ task.list.slug }}">{{ task.list }}</a>  </td>
                  {% endifequal %}	                       
