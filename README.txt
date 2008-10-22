@@ -79,30 +79,16 @@ belonging to that group.
 
 1) Put django-todo/tasks somewhere on your Python path.
 
-2) To set up your database, run:
+2) In settings.py:
 
-	python manage.py syncdb
-
-3) Add to your URL conf:
-
-	(r'^todo/', include('todo.urls')),
-
-
-4) Add a "todo" symlink from your project's media directory to the application's media directory, e.g.
-
-    cd ~/mysites/myproject/media
-    ln -s /path/to/app/dir/django-todo/todo/media/todo todo
-
-5) In settings.py:
 
     INSTALLED_APPS = (
         ...
         'todo',
     )    
 
-
-    TODO_MEDIA_URL = '/site_media/todo/'
-
+    # This assumes you're serving static media from /site_media
+    TODO_MEDIA_URL = '/site_media/todo/' 
 
     TEMPLATE_CONTEXT_PROCESSORS = (
         "django.core.context_processors.auth",
@@ -113,12 +99,29 @@ belonging to that group.
     )
 
 
+3) To set up your database, run:
+
+	python manage.py syncdb
+
+4) Add to your URL conf:
+
+	(r'^todo/', include('todo.urls')),
+
+
+5) Add a "todo" symlink from your project's media directory to the application's media directory, e.g.
+
+    cd ~/mysites/myproject/media
+    ln -s /path/to/app/dir/django-todo/todo/media/todo todo
+
+
 6) Log in as that user and access /todo
 
 
 --------------------
 Versions
 --------------------
+
+0.9.4 - Replaced str with unicode in models. Fixed links back to lists in "My Tasks" view.
 
 0.9.3 - Missing link to the individual task editing view
 

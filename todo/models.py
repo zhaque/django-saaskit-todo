@@ -24,7 +24,7 @@ class List(models.Model):
 
             super(List, self).save()
 
-    def __str__(self):
+    def __unicode__(self):
         return self.name
         
     class Meta:
@@ -61,7 +61,7 @@ class Item(models.Model):
         if datetime.date.today() > self.due_date :
             return 1
 
-    def __str__(self):
+    def __unicode__(self):
         return self.name
         
     # Auto-set the item creation date

@@ -87,7 +87,7 @@
 	            <td><a href="/profiles/{{ task.assigned_to }}">{{ task.assigned_to }}</a></td>
 	            <td><a href="/todo/task/{{ task.id }}"><img src="{{ TODO_MEDIA_URL }}images/action_go.gif" style="padding-top:3  px;"></a></td>	            
                 {% ifequal list_slug "mine" %}
-                <td><a href="/list/{{ task.list.slug }}">{{ task.list }}</a>  </td>
+                <td><a href="/todo/{{ task.list.id }}/{{ task.list.slug }}">{{ task.list }}</a></td>
                  {% endifequal %}	                       
 	            <td><input type="checkbox" name="del_task" value="{{ task.id }}" id="del_task_{{ task.id }}">   </td> 	            
             </tr>
