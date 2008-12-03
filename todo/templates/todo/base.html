@@ -17,11 +17,14 @@
 <body>
 
 <script type="text/javascript" charset="utf-8">
+    
+    // thedate.x comes from the edit_task view. If this is a new entry, 
+    // thedate won't be present and datepicker will fall back on the default (today).
+    
     $(document).ready(function(){
-        $('#id_due_date').datepicker();
+        $('#id_due_date').datepicker({defaultDate: new Date({{thedate.year}}, {{thedate.month}} - 1, {{thedate.day}}),});
      });
 </script>
-
 
 
 
@@ -59,8 +62,7 @@
     
     &copy; Nowhereland, 2008 
     </p>
-    
-    <a href="http://djangopony.com/" class="ponybadge" title="Magic! Ponies! Django! Whee!"><img src="http://media.djangopony.com/img/small/badge.png" width="210" height="65" alt="ponybadge" border="0"></a>
+
     {% endblock %}
 
 </div>

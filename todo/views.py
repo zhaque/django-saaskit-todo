@@ -226,7 +226,7 @@ def edit_task(request,task_id):
 
         else:
             form = EditItemForm(instance=task)
-
+            thedate = task.due_date
 
     else:
         request.user.message_set.create(message="You do not have permission to view/edit this task.")

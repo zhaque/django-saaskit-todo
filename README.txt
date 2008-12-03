@@ -121,6 +121,9 @@ belonging to that group.
 Versions
 --------------------
 
+0.9.5 - Fixed jquery bug when editing existing events - datepicker now shows correct date.
+        Removed that damned Django pony from base template.
+
 0.9.4 - Replaced str with unicode in models. Fixed links back to lists in "My Tasks" view.
 
 0.9.3 - Missing link to the individual task editing view
