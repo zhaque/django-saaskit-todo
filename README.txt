@@ -2,7 +2,7 @@
 ABOUT DJANGO-TODO
 --------------------
 
-Version 0.9.3
+Version 0.9.5
 
 Scot Hacker - shacker at birdhouse dot org
 
