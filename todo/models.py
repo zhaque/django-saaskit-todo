@@ -46,14 +46,6 @@ class Item(models.Model):
     created_by = models.ForeignKey(User, related_name='created_by')
     assigned_to = models.ForeignKey(User, related_name='todo_assigned_to')
     note = models.TextField(blank=True)
-    
-    # PRIORITY_CHOICES = (
-    #      ('1', '1'),
-    #      ('2', '2'),
-    #      ('3', '3'),
-    #      ('4', '4'),
-    #      ('5', '5'),                                    
-    #  )
     priority = models.PositiveIntegerField(max_length=3)
     
     # Model method: Has due date for an instance of this object passed?
@@ -70,10 +62,6 @@ class Item(models.Model):
         # Set datetime on initial item save (better than deprecated auto_now_add)
         if not self.id:
             self.created_date = datetime.datetime.now()
-            # print self.created_date
-        else:
-            # print self.created_date
-            pass
         super(Item, self).save()
 
 

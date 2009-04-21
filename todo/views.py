@@ -177,13 +177,12 @@ def view_list(request,list_id=0,list_slug='',view_completed=0):
         completed_list = Item.objects.filter(list=list.id, completed=1)
 
 
-    if request.POST.getlist('add_task'):
+    if request.POST.getlist('add_task') :
         form = AddItemForm(list, request.POST,initial={
         'assigned_to':request.user.id,
         'priority':999,
         })
         
-
         if form.is_valid():
             # Save task first so we have a db object to play with
             new_task = form.save()
@@ -206,10 +205,11 @@ def view_list(request,list_id=0,list_slug='',view_completed=0):
             return HttpResponseRedirect(request.path)
 
     else:
-        form = AddItemForm(list, initial={
-            'assigned_to':request.user.id,
-            'priority':999,
-            } )
+        if list_slug != "mine" : # We don't allow adding a task on the "mine" view
+            form = AddItemForm(list, initial={
+                'assigned_to':request.user.id,
+                'priority':999,
+                } )
 
     if request.user.is_staff:
         can_del = 1

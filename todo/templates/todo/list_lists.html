@@ -19,7 +19,7 @@
 
    	<ul class="mainlist">
    		{% for list in list_list %}
-   	        <li><a href="{% url todo-incomplete_tasks list.id list.slug %}">{{ list.name }} - {{ list.group }}</a></li>
+   	        <li><a class="todo" href="{% url todo-incomplete_tasks list.id list.slug %}">{{ list.name }} - {{ list.group }}</a></li>
    	    {% endfor %}
    	</ul>
 

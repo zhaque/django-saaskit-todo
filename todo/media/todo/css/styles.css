@@ -69,7 +69,7 @@ table.nocolor, table.nocolor tr, table.nocolor td {
 
 table#tasktable td, table#tasktable th {
     padding: 5px;
-    font-size:0.8em;
+/*    font-size:0.9em;*/
 }
 
 table#tasktable th {
