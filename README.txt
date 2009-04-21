@@ -41,12 +41,20 @@ Take care of these items before installing django-todo:
 2) To take advantage of the ajaxy stuff, you'll need a reference to the main jquery 
 library and jquery-ui (http://jqueryui.com/download) in your templates. 
 django-todo supplies an additional jquery module in its own media subdirectory but 
-assumes that jquery and jquery-ui are already present. The django-todo 
-template todo/base.html references:
+assumes that jquery and jquery-ui are already present. Your project templates should 
+include something like this in the head:
 
-<script src="{{MEDIA_URL}}jquery/js/ui.datepicker.js" type="text/javascript"></script>
+<link type="text/css" href="/media/js/jquery-ui-1.7.1.custom.css" rel="Stylesheet" />
+<script type="text/javascript" src="/media/js/jquery-1.3.2.min.js"></script>
+<script type="text/javascript" src="/media/js/ui.core.js"></script>
 
 Tweak as necessary. 
+
+django-todo pages that require it will insert additional CSS/JavaScript into page heads,
+so your project's base templates must include:
+
+{% block extrahead %}{% endblock %}
+
 
 
 3) All views in django-todo are for registered users only, so you'll need a full login
