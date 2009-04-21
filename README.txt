@@ -2,11 +2,12 @@
 ABOUT DJANGO-TODO
 --------------------
 
-Version 0.9.5
+Version 1.0
 
 Scot Hacker - shacker at birdhouse dot org
 
 django-todo is a pluggable multi-user, multi-group task management and assignment application for Django. 
+In many organizations, django-todo can serve as a complete, working ticketing system.
 
 The assumption is that your organization/publication/company has multiple groups of employees,
 each with multiple users. Users may belong to multiple groups, and each group can have multiple todo lists.
@@ -25,59 +26,60 @@ django-todo provides the following URLs/views:
 /todo/[group_id]/[slug] - View a specific list, or add tasks to list. Mark task items as complete/incomplete
 /todo/[group_id]/[slug]/delete - Delete a list (is_staff() users only)
 /todo/mine - Show tasks assigned specifically to the currently logged in user, irrespective of list
-/todo/[slug]/task/[ID] - Edit an existing task (change name, reassign, change due date)
+/todo/[slug]/task/[ID] - View/edit an existing task (change name, reassign, change due date)
 
 --------------------
 REQUIREMENTS
 --------------------
 
-All views are login-required. Unauthenticated users will be redirected to the default /accounts/login.
+Take care of these items before installing django-todo:
+
+
+1) An existing Django project site, with media and templates dirs wired up and working. 
+    
+
+2) To take advantage of the ajaxy stuff, you'll need a reference to the main jquery 
+library and jquery-ui (http://jqueryui.com/download) in your templates. 
+django-todo supplies an additional jquery module in its own media subdirectory but 
+assumes that jquery and jquery-ui are already present. The django-todo 
+template todo/base.html references:
+
+<script src="{{MEDIA_URL}}jquery/js/ui.datepicker.js" type="text/javascript"></script>
+
+Tweak as necessary. 
+
+
+3) All views in django-todo are for registered users only, so you'll need a full login
+system. I suggest setting up django-registration if you don't have it already.
+
+4) Make sure your project is set up to send smtp email, i.e. you have something like this in your settings:
+
+EMAIL_USE_TLS = False
+EMAIL_HOST = 'mail.domain.com'
+EMAIL_HOST_USER = 'sysmail@domain.com'
+DEFAULT_FROM_EMAIL = 'sysmail@domain.com'
+EMAIL_HOST_PASSWORD = 'password'
+EMAIL_PORT = 587
+
+
+5) All views are login-required. Unauthenticated users will be redirected to the default /accounts/login.
 All tasks are "created by" the current user and "assigned to" a specific user (default is same user).
 Therefore, you must have a user authentication system (login/logout system) working first. 
 You can build it yourself per http://docs.djangoproject.com/en/dev/topics/auth/ , or use 
 django-registration (though you may want to disable open registration if you do that).
 
 Task due dates can be entered manually, but for ease of use, try a JavaScript date picker. I recommend
-JQuery with UI/DatePicker. The sample templates provided include a JQuery date picker.
+JQuery with UI/DatePicker. 
 
-http://jquery.com/
-http://docs.jquery.com/UI/Datepicker
 
-To get the datepicker working, use something like this, either in base.html or in this app's templates:
 
-<script type="text/javascript" src="/site_media/js/jquery-1.2.6.min.js"></script>
-<script type="text/javascript" src="/site_media/js/ui.datepicker.js"></script>    
-
-<script type="text/javascript" charset="utf-8">
-    $(document).ready(function(){
-        $('#id_due_date').datepicker();
-     });
-</script>
-
---------------------
-TEMPLATES AND MEDIA
---------------------
-
-django-todo requires the following templates to be living in templates/todo:
-
-list_lists.html
-view_list.html
-del_list.html
-edit_task.html
-
-Sample templates and media (CSS, images) are included in the "samples" folder, but are NOT supported. 
-To use them, copy them from the "samples" dir to corresponding locations in your project dir,
-making sure your SITE_MEDIA URL is wired up correctly. Feel free to modify these or create your own. 
 
 --------------------
 INSTALLATION
 --------------------
 
-0) Recommended: Install django-registration (or build your own auth system) and make sure you can 
-log in at /accounts/login .  In Admin, make sure you've created at least one group and one user 
-belonging to that group.
 
-1) Put django-todo/tasks somewhere on your Python path.
+1) Put django-todo/todo somewhere on your Python path.
 
 2) In settings.py:
 
@@ -85,10 +87,9 @@ belonging to that group.
     INSTALLED_APPS = (
         ...
         'todo',
+        'django.contrib.comments',
     )    
 
-    # This assumes you're serving static media from /site_media
-    TODO_MEDIA_URL = '/site_media/todo/' 
 
     TEMPLATE_CONTEXT_PROCESSORS = (
         "django.core.context_processors.auth",
@@ -103,23 +104,40 @@ belonging to that group.
 
 	python manage.py syncdb
 
+
 4) Add to your URL conf:
 
 	(r'^todo/', include('todo.urls')),
 
 
-5) Add a "todo" symlink from your project's media directory to the application's media directory, e.g.
 
-    cd ~/mysites/myproject/media
-    ln -s /path/to/app/dir/django-todo/todo/media/todo todo
+5) Connect up the distributed media and templates to your project
+
+    Either copy django-todo's media/todo and templates/todo dirs into your 
+    project's "media" and "templates" dirs, or create symlinks: 
+
+    cd /path/to/myproject/media
+    ln -s /path/to/django-todo/todo/media/todo todo
+
+    cd /path/to/myproject/templates
+    ln -s /path/to/django-todo/todo/templates/todo todo
 
 
-6) Log in as that user and access /todo
+
+6) Add two links to your site's navigation system:
+        <a href="{% url todo-lists %}">To-do Lists</a>
+        <a href="{% url todo-mine %}">My Tasks</a>
+
+
+7) Log in and access /todo
 
 
 --------------------
 Versions
 --------------------
+
+1.0.0 - Major upgrade to release version. Drag and drop task prioritization. E-mail notifications
+        (now works more like a ticket system). More attractive date picker. Bug fixes.
 
 0.9.5 - Fixed jquery bug when editing existing events - datepicker now shows correct date.
         Removed that damned Django pony from base template.
@@ -146,11 +164,7 @@ Versions
 TODO ITEMS for django-todo
 --------------------
 
-- Send email to task assignees before a task is due
-
 - Provide RSS feeds of assigned tasks, list tasks, and group tasks.
-
-- URL of a list view should reference the group name, not group ID. But groups don't have slugs by default, so would have to extend the Group model...
 
 
 --------------------

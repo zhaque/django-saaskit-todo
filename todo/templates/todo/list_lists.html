@@ -1,0 +1,37 @@
+{% extends "todo/base.html" %}
+
+{% block title %}{{ list_title }} Todo Lists{% endblock %}
+
+{% block content %}
+
+
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+   <h1>To-do Lists</h1>
+   
+   <p>{{ item_count }} items in {{ list_count }} lists</p>
+
+   	<ul class="mainlist">
+   		{% for list in list_list %}
+   	        <li><a href="{% url todo-incomplete_tasks list.id list.slug %}">{{ list.name }} - {{ list.group }}</a></li>
+   	    {% endfor %}
+   	</ul>
+
+    <div class="todo-break">
+    &nbsp;
+    </div>
+
+    <h2>Add a list:</h2>
+    
+	<form action="." method="POST">	
+	<table>{{ form }}</table>
+	<p><input type="submit" value="Submit" class="todo-button"></p>
+	</form>
+	
+{% endblock %}
