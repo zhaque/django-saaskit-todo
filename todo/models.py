@@ -68,3 +68,19 @@ class Item(models.Model):
     class Meta:
         ordering = ["priority"]        
         
+
+class Comment(models.Model):    
+    """
+    Not using Django's built-in comments becase we want to be able to save 
+    a comment and change task details at the same time. Rolling our own since it's easy.
+    """
+    author = models.ForeignKey(User)
+    task = models.ForeignKey(Item)
+    date = models.DateTimeField(default=datetime.datetime.now)
+    body = models.TextField(blank=True)
+    
+    def __unicode__(self):        
+        return '%s - %s' % (
+                self.author, 
+                self.date, 
+                )        

@@ -1,6 +1,6 @@
 from django import forms 
 from django.shortcuts import render_to_response
-from todo.models import Item, List
+from todo.models import Item, List, Comment
 from todo.forms import AddListForm, AddItemForm, EditItemForm
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
@@ -225,6 +225,7 @@ def view_task(request,task_id):
     """
 
     task = get_object_or_404(Item, pk=task_id)
+    comment_list = Comment.objects.filter(task=task_id)
         
     # Before doing anything, make sure the accessing user has permission to view this item.
     # Determine the group this task belongs to, and check whether current user is a member of that group.
@@ -233,16 +234,28 @@ def view_task(request,task_id):
     if task.list.group in request.user.groups.all() or request.user.is_staff:
         
         auth_ok = 1
-        if request.POST:    
+        # Distinguish between POSTs from the two forms on the page (edit task and add comment) by detecting a field name
+        if request.POST:
              form = EditItemForm(request.POST,instance=task)
              if form.is_valid():
                  form.save()
+                 
+                 # Also save submitted comment, if non-empty
+                 if request.POST['comment-body']:
+                     c = Comment(
+                         author=request.user, 
+                         task=task,
+                         body=request.POST['comment-body'],
+                     )
+                     c.save()
+                 
                  request.user.message_set.create(message="The task has been edited.")
                  return HttpResponseRedirect(reverse('todo-incomplete_tasks', args=[task.list.id, task.list.slug]))
                  
         else:
             form = EditItemForm(instance=task)
             thedate = task.due_date
+            
 
     else:
         request.user.message_set.create(message="You do not have permission to view/edit this task.")

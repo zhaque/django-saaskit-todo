@@ -1,5 +1,4 @@
 {% extends "todo/base.html" %}
-{% load comments %}
 
 {% block title %}Task: {{ task.title }}{% endblock %}
 
@@ -32,49 +31,98 @@ $(document).ready(function() {
 {% ifequal auth_ok 1 %}
 
 <h2>{{ task }}</h2>
+
+<form action="" method="POST">
+<p style="margin-bottom:0px;" id="slideToggle" >&rarr; Click to edit details &larr;</p>
+
 <p><strong>In list:</strong> <a href="{% url todo-incomplete_tasks task.list.id task.list.slug %}" class="showlink">{{ task.list }}</a><br /></p>
 
 <p>
 <strong>Assigned to:</strong> {{ task.assigned_to.first_name }} {{ task.assigned_to.last_name }}<br />
 <strong>Created by:</strong> {{ task.created_by.first_name }} {{ task.created_by.last_name }}<br />
 <strong>Due date:</strong>  {{ task.due_date }}<br />
-
-<strong>Completed:</strong> {{ task.completed|yesno:"Yup,Nope" }}<br />
+<strong>Completed:</strong> {{ form.completed }}<br />
 </p>
+
 
 {% if task.note %}
 <p><strong>Note:</strong> {{ task.note|safe|linebreaks }}</p>    
 {% endif %}
 
-
-
-<h3 style="margin-bottom:0px;" id="slideToggle" >&rarr; Click to edit task &larr;</h3>
 <div id="TaskEdit">
 <h3>Edit Task</h3>
-<form action="" method="POST">
-<table>{{ form }}</table>   
+
+<table>
+    {{ form.management_form }}
+
+    
+    {{ form.id }}
+<tr>    
+    <td>Task:</td>
+    <td>{{ form.title }}  </td>
+</tr>
+
+<tr>    
+    <td>List:</td>
+    <td>{{ form.list }}  </td>
+</tr>
+
+<tr>    
+    <td>Created:</td>
+    <td>{{ form.created_date }}  </td>
+</tr>
+
+<tr>    
+    <td>Due:</td>
+    <td>{{ form.due_date }}  </td>
+</tr>
+
+
+
+<tr>    
+    <td>Created by:</td>
+    <td>{{ form.created_by }}  </td>
+</tr>
+
+<tr>    
+    <td>Assigned to:</td>
+    <td>{{ form.assigned_to }}  </td>
+</tr>
+
+<tr>    
+    <td valign="top">Note:</td>
+    <td>{{ form.note }}  </td>
+</tr>
+
+<tr>    
+    <td>Priority:</td>
+    <td>{{ form.priority }}  </td>
+</tr>
+    
+</table>   
 <p><input type="submit" class="todo-button" name="edit_task" value="Edit task"></p>
-</form>
 </div>
 
-<br />
 
 <hr />
 
 
+<h3>Add comment</h3>
+
+    <textarea name="comment-body" rows="8" cols="40"></textarea>
+    <p><input class="todo-button"type="submit" value="Submit"></p>
+
+</form>
+
 <h3>Comments on this task</h3>    
 
-
-{% get_comment_list for task as comment_list %}
 {% for comment in comment_list %}
-    <p><strong>{{ comment.user_name }}, {{ comment.submit_date|date:"F d Y" }}</strong> </p>
-    {{ comment.comment|linebreaks }}
+    <p><strong>{{ comment.author.first_name }} {{ comment.author.last_name }}, {{ comment.date|date:"F d Y" }}</strong> </p>
+    {{ comment.body|safe|linebreaks }}
 {% endfor %}
 
-<h3>Add new comment</h3>
-{% render_comment_form for task %}
+
 
 {% endifequal %}
-
 	
 {% endblock %}

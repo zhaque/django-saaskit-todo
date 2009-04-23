@@ -2,7 +2,7 @@
 ABOUT DJANGO-TODO
 --------------------
 
-Version 1.0
+Version 1.0.1
 
 Scot Hacker - shacker at birdhouse dot org
 
@@ -95,7 +95,6 @@ INSTALLATION
     INSTALLED_APPS = (
         ...
         'todo',
-        'django.contrib.comments',
     )    
 
 
@@ -144,6 +143,12 @@ INSTALLATION
 Versions
 --------------------
 
+1.0.1 - When viewing a single task that you want to close, it's useful to be able to comment on and 
+        close a task at the same time. We were using django-comments so these were different models
+        in different views. Solution was to stop using django-comments and roll our own, then rewire
+        the view. Apologies if you were using a previous version - you may need to port over your comments
+        to the new system.
+
 1.0.0 - Major upgrade to release version. Drag and drop task prioritization. E-mail notifications
         (now works more like a ticket system). More attractive date picker. Bug fixes.
 
@@ -179,6 +184,4 @@ TODO ITEMS for django-todo
 THANKS 
 
 To @mandric for all the assistance!
---------------------
 
--30-
