@@ -260,7 +260,7 @@ def view_task(request,task_id):
                      commenters = Comment.objects.filter(task=task)
                      for c in commenters:
                          recip_list.append(c.author.email)
-                     # Eliminated duplicate emails with the Python set() function
+                     # Eliminate duplicate emails with the Python set() function
                      recip_list = set(recip_list)     
                      
                      # Send message
