@@ -5,7 +5,12 @@ from django.contrib import admin
 from django.contrib.auth.models import User,Group
 import string, datetime
 
-
+class ListManager(models.Manager):
+    """
+    Retrieves all incomplete tasks for a given list.
+    """
+    def get_query_set(self):
+        return super(ListManager, self).get_query_set().filter(completed=0)
 
 class List(models.Model):
     name = models.CharField(max_length=60)
@@ -27,6 +32,10 @@ class List(models.Model):
     def __unicode__(self):
         return self.name
         
+    # Custom manager lets us do things like Item.completed_tasks.all()
+    objects = models.Manager()
+    incomplete_tasks = ListManager()        
+        
     class Meta:
         ordering = ["name"]        
         verbose_name_plural = "Lists"
@@ -35,6 +44,8 @@ class List(models.Model):
         unique_together = ("group", "slug")
         
         
+
+
         
 class Item(models.Model):
     title = models.CharField(max_length=140)
