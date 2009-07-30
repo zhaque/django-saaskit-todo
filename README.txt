@@ -2,7 +2,7 @@
 ABOUT DJANGO-TODO
 --------------------
  
-Version 1.0.1
+Version 1.1
 
 Scot Hacker - shacker at birdhouse dot org
 
@@ -98,15 +98,6 @@ INSTALLATION
     )    
 
 
-    TEMPLATE_CONTEXT_PROCESSORS = (
-        "django.core.context_processors.auth",
-        "django.core.context_processors.debug",
-        "django.core.context_processors.i18n",
-        "django.core.context_processors.media",
-        "todo.context_processors.todo_vars",
-    )
-
-
 3) To set up your database, run:
 
 	python manage.py syncdb
@@ -142,6 +133,10 @@ INSTALLATION
 --------------------
 Versions
 --------------------
+
+1.1 -   Completion date was set properly when checking items off a list, but not when saving from an Item
+        detail page. Added a save method on Item to fix. Fixed documentation bug re: context_processors. 
+        Newly added comments are now emailed to everyone who has participated in a thread on a task.
 
 1.0.1 - When viewing a single task that you want to close, it's useful to be able to comment on and 
         close a task at the same time. We were using django-comments so these were different models

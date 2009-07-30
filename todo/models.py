@@ -68,11 +68,15 @@ class Item(models.Model):
     def __unicode__(self):
         return self.title
         
-    # Auto-set the item creation date
+    # Auto-set the item creation / completed date
     def save(self):
-        # Set datetime on initial item save (better than deprecated auto_now_add)
+        # Set datetime on initial item save 
         if not self.id:
             self.created_date = datetime.datetime.now()
+            
+        # If Item is being marked complete, set the completed_date
+        if self.completed :
+            self.completed_date = datetime.datetime.now()
         super(Item, self).save()
 
 
