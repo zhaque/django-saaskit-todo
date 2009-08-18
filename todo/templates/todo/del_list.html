@@ -2,7 +2,7 @@
 
 {% block title %}{{ list_title }} to-do items{% endblock %}
 
-{% block content %}
+{% block body %}
 
 {# Only admins can delete lists. #}
 {% ifequal can_del 1 %}
@@ -11,8 +11,8 @@
     {% if list_killed %}
 
        <p> {{ list.name }} is gone.</p>
-   
-        <a href="{% url todo-lists %}">Return to lists</a>   
+
+        <a href="{% url todo-lists %}">Return to lists</a>
 
     {% else %}
 
@@ -20,16 +20,16 @@
 
         <p>Category tally:</p>
 
-         <ul>   
+         <ul>
             <li>Incomplete: {{ item_count_undone }} </li>
             <li>Complete: {{ item_count_done }} </li>
             <li><strong>Total: {{ item_count_total }}</strong> </li>
-         </ul>   
- 
+         </ul>
+
         <p> ... all of which will be irretrievably <strong>blown away</strong>. Are you sure you want to do that?</p>
 
         <form action="" method="post" accept-charset="utf-8">
- 
+
             <input type="hidden" name="list" value="{{ list.id }}" id="some_name">
          <p><input type="submit" name="delete-confirm" value="Do it! &rarr;" class="todo-button"> </p>
         </form>
@@ -49,7 +49,7 @@
 
 
 
-   
-   
-	
+
+
+
 {% endblock %}

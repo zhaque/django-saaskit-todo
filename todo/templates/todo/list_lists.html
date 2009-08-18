@@ -2,7 +2,7 @@
 
 {% block title %}{{ list_title }} Todo Lists{% endblock %}
 
-{% block content %}
+{% block body %}
 
 
     {% if messages %}
@@ -14,7 +14,7 @@
     {% endif %}
 
    <h1>To-do Lists</h1>
-   
+
    <p>{{ item_count }} items in {{ list_count }} lists</p>
 
    	<ul class="mainlist">
@@ -28,10 +28,10 @@
     </div>
 
     <h2>Add a list:</h2>
-    
-	<form action="." method="POST">	
+
+	<form action="." method="POST">
 	<table>{{ form }}</table>
 	<p><input type="submit" value="Submit" class="todo-button"></p>
 	</form>
-	
+
 {% endblock %}

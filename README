@@ -1,0 +1,2 @@
+Customized version of django-todo, removal of jQuery, group support etc. The code will be updated on a need based.
+Original django-todo can be found here @ http://code.google.com/p/django-todo/
