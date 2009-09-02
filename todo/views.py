@@ -15,6 +15,9 @@ from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 import datetime
 
+from scratchpad import models
+from scratchpad.forms import AddScratchPadForm
+
 # Need for links in email templates
 current_site = Site.objects.get_current()
 
@@ -216,6 +219,17 @@ def view_list(request,list_id=0,list_slug='',view_completed=0):
                 'priority':999,
                 } )
 
+    # Get all scratchpads connected via muaccounts with this user
+
+    # get account scratchpads only if we have a muaccount!
+    if getattr(request,"muaccount",False):
+
+        pads = models.ScratchPad.objects.filter(account=request.muaccount)
+    else:
+        pads = None
+
+    scrapform = AddScratchPadForm()
+
     if request.user.is_staff:
         can_del = 1
 
@@ -231,7 +245,7 @@ def view_task(request,task_id):
 
     task = get_object_or_404(Item, pk=task_id)
     comment_list = Comment.objects.filter(task=task_id)
-
+    task_list = Item.objects.filter(list=task.list.id, list__account=request.muaccount, completed=0)
     # Before doing anything, make sure the accessing user has permission to view this item.
     # Determine the group this task belongs to, and check whether current user is a member of that group.
     # Admins can edit all tasks.
@@ -286,6 +300,16 @@ def view_task(request,task_id):
 
     else:
         request.user.message_set.create(message="You do not have permission to view/edit this task.")
+    # Get all scratchpads connected via muaccounts with this user
+
+    # get account scratchpads only if we have a muaccount!
+    if getattr(request,"muaccount",False):
+
+        pads = models.ScratchPad.objects.filter(account=request.muaccount)
+    else:
+        pads = None
+
+    scrapform = AddScratchPadForm()
 
     return render_to_response('todo/view_task.html', locals(), context_instance=RequestContext(request))
 
