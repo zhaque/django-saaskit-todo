@@ -16,7 +16,7 @@ from django.db import IntegrityError
 import datetime
 
 from scratchpad import models
-from scratchpad.forms import AddScratchPadForm
+from scratchpad.forms import AddScratchpadForm
 
 # Need for links in email templates
 current_site = Site.objects.get_current()
@@ -224,11 +224,11 @@ def view_list(request,list_id=0,list_slug='',view_completed=0):
     # get account scratchpads only if we have a muaccount!
     if getattr(request,"muaccount",False):
 
-        pads = models.ScratchPad.objects.filter(account=request.muaccount)
+        pads = models.Scratchpad.objects.filter(account=request.muaccount)
     else:
         pads = None
 
-    scrapform = AddScratchPadForm()
+    scrapform = AddScratchpadForm()
 
     if request.user.is_staff:
         can_del = 1
@@ -305,11 +305,11 @@ def view_task(request,task_id):
     # get account scratchpads only if we have a muaccount!
     if getattr(request,"muaccount",False):
 
-        pads = models.ScratchPad.objects.filter(account=request.muaccount)
+        pads = models.Scratchpad.objects.filter(account=request.muaccount)
     else:
         pads = None
 
-    scrapform = AddScratchPadForm()
+    scrapform = AddScratchpadForm()
 
     return render_to_response('todo/view_task.html', locals(), context_instance=RequestContext(request))
 
